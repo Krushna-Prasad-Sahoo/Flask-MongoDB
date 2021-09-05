@@ -1,0 +1,42 @@
+// import data in MongoDB
+> mongoimport sample.json  -d  <database_name> -c <collection_name>    --jsonArray
+  
+// after connecting into mongodb shell
+> show dbs
+> use <database_name>
+> show collections
+  
+// Aggregation Pipeline
+> db.countries.aggregate([{$group: {_id: {Language: “$Language”}, totalCountry: {$sum: 1}}}, {$sort: {totalCountry: 1}}])
+
+// group by Language
+> {$group: {_id: {Language: "$Language"} 
+            
+// count the total countries asscoiated with that language
+> totalCountry: {$sum: 1} 
+            
+// sort them in ascending order
+> {$sort: {totalCountry: 1} 
+   
+// Map reduce functions
+> var mapFunction = function() { … };
+> var reduceFunction = function(key, values) { … };
+> db.runCommand(
+ 	{
+ 	mapReduce: <input-collection>,
+ 	map: mapFunction,
+ 	reduce: reduceFunction,
+ 	out: { merge: <output-collection> },
+ 	query: <query>
+ 	}
+ )
+  
+// now using map reduce function and saving it in map_reduced collection
+> db.countries.mapReduce( 
+  	 mapFunction,
+  	 reduceFunction, 
+  	 {out: "map_reduced"} 
+)
+
+// we can do a query
+> db.map_reduced.find().sort( { } )
